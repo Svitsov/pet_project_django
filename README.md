@@ -1,2 +1,19 @@
-# pet_project_django
- Pet project for learning about django. Includes information with programming topics that I want to repeat
+# Educator
+### Описание
+Пэт проект, для практики на Джанго, 
+кроме того на нем я буду размещать актуальную для себя информацию по программированию
+### Технологии
+Python 3.10
+Django 4.2.4
+### Запуск проекта в dev-режиме
+- Установите и активируйте виртуальное окружение
+- Установите зависимости из файла requirements.txt
+```
+pip install -r requirements.txt
+``` 
+- В папке с файлом manage.py выполните команду:
+```
+python3 manage.py runserver
+```
+### Авторы
+Кирилл Свицов
