@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{% static 'static/task/images/nelson.png' %}" type="image/x-icon"/>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -33,3 +35,31 @@
 </footer>
 </body>
 </html>
+
+<!-- Вставляем JavaScript для активации карусели и увеличенных изображений -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+V7Ag6nb/rU5n9n1ag7JpVoN8r8TVhoSTXc5AuF7GJ2ZIbb"
+        crossorigin="anonymous"></script>
+<script>
+    // Функция для увеличенных изображений
+    function toggleFullscreenImage(imageUrl) {
+        const fullscreenImage = document.querySelector('.fullscreen-image');
+        const imageElement = fullscreenImage.querySelector('img');
+
+        if (fullscreenImage.style.display === 'flex') {
+            fullscreenImage.style.display = 'none';
+            imageElement.src = '';
+        } else {
+            fullscreenImage.style.display = 'flex';
+            imageElement.src = imageUrl;
+        }
+    }
+
+    // Активация карусели
+    $(document).ready(function() {
+        $('#imageCarousel').carousel();
+    });
+</script>
