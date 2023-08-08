@@ -1,24 +1,22 @@
 // scripts.js
 
 // Функция для увеличенных изображений
-let fullscreenImageUrl = '';
-
 function toggleFullscreenImage(imageUrl) {
     const fullscreenImage = document.querySelector('.fullscreen-image');
     const imageElement = fullscreenImage.querySelector('img');
 
-    if (fullscreenImage.style.display === 'none' || fullscreenImageUrl !== imageUrl) {
-        fullscreenImageUrl = imageUrl;
-        fullscreenImage.style.display = 'flex';
-        imageElement.src = imageUrl;
-    } else {
-        fullscreenImageUrl = '';
+    if (fullscreenImage.style.display === 'flex') {
         fullscreenImage.style.display = 'none';
         imageElement.src = '';
+    } else {
+        fullscreenImage.style.display = 'flex';
+        imageElement.src = imageUrl;
     }
 }
 
 // Активация карусели
 $(document).ready(function() {
-    $('#imageCarousel').carousel();
+    // Используйте класс carousel для активации всех каруселей на странице
+    $('.carousel').carousel();
 });
+

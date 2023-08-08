@@ -1,84 +1,11 @@
 {% extends 'task/base.html' %}
+{% load static %}
+
 {% block title %}
 Главная страница
 {% endblock title %}
+
 {% block content %}
-<style>
-    .card {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .card-img {
-        height: 300px;
-        object-fit: cover;
-        cursor: pointer;
-    }
-    .fullscreen-image {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-    .fullscreen-image img {
-        max-width: 100%;
-        max-height: 80%;
-        cursor: pointer;
-    }
-    .category-subject-links {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.6);
-        margin-top: 8px;
-    }
-    .category-subject-links a {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    .category-subject-links a:hover {
-        color: black;
-    }
-    .read-more-btn {
-        width: 100%;
-        background-color: #f8f9fa;
-        color: #343a40;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        text-align: center;
-        padding: 5px 0;
-        margin-top: 10px;
-        border-radius: 0 0 5px 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .read-more-btn:hover {
-        background-color: #6c757d;
-        color: white;
-    }
-    .author-date {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.6);
-        margin-top: 8px;
-    }
-    .author-date a {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    .author-date a:hover {
-        color: black;
-    }
-</style>
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for task in tasks %}
@@ -97,13 +24,14 @@
                     </div>
                     <a class="carousel-control-prev" href="#imageCarousel{{ task.pk }}" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
                     </a>
                     <a class="carousel-control-next" href="#imageCarousel{{ task.pk }}" role="button" data-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
                     </a>
                 </div>
+                <script>
+                    $('#imageCarousel{{ task.pk }}').carousel(); // Инициализация карусели для текущей задачи
+                </script>
                 {% else %}
                 <a href="javascript:void(0);" onclick="toggleFullscreenImage('{{ task.image.first.image.url }}');">
                     <img src="{{ task.image.first.image.url }}" class="d-block w-100 card-img" alt="Image">
@@ -112,10 +40,10 @@
                 <div class="card-body">
                     <h5 class="card-title">{{task.title}}</h5>
                     <p class="card-text">{{task.description|linebreaks|truncatewords:20}}.</p>
-                    <a href="#" class="btn btn-primary read-more-btn">Читать целиком</a>
+                    <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
                     <div class="category-subject-links">
-                        <a href="#">{{ task.category }}</a>
-                        <a href="#">{{ task.subject }}</a>
+                        <a href="{% url 'task:category_detail' category_id=task.category.pk %}">{{ task.category }}</a>
+                        <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}">{{ task.subject }}</a>
                     </div>
                     <div class="author-date">
                         <a href="#" class="author">{{ task.author }}</a>
@@ -136,25 +64,8 @@
         <img src="" alt="Fullscreen Image">
     </a>
 </div>
-<script>
-    let fullscreenImageUrl = '';
-
-    function toggleFullscreenImage(imageUrl) {
-        const fullscreenImage = document.querySelector('.fullscreen-image');
-        const imageElement = fullscreenImage.querySelector('img');
-
-        if (fullscreenImage.style.display === 'none' || fullscreenImageUrl !== imageUrl) {
-            fullscreenImageUrl = imageUrl;
-            fullscreenImage.style.display = 'flex';
-            imageElement.src = imageUrl;
-        } else {
-            fullscreenImageUrl = '';
-            fullscreenImage.style.display = 'none';
-            imageElement.src = '';
-        }
-    }
-</script>
 {% endblock %}
+
 
 
 

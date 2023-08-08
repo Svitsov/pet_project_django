@@ -1,9 +1,7 @@
-{% extends 'task/base.html' %}
-
+{% extends 'task/base2.html' %}
 {% block title %}
 Главная страница
 {% endblock title %}
-
 {% block content %}
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -39,7 +37,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{task.title}}</h5>
                     <p class="card-text">{{task.description|linebreaks|truncatewords:20}}.</p>
-                    <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
+                    <a href="#" class="btn btn-primary read-more-btn">Читать целиком</a>
                     <div class="category-subject-links">
                         <a href="#">{{ task.category }}</a>
                         <a href="#">{{ task.subject }}</a>
@@ -64,3 +62,4 @@
     </a>
 </div>
 {% endblock %}
+

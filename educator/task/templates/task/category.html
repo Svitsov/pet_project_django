@@ -1,7 +1,26 @@
 {% extends 'task/base.html' %}
 {% block title %}
-Категории
+Список категорий
 {% endblock title %}
 {% block content %}
-Пока пусто
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for category in categories %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.title }}</h5>
+                    <p class="card-text">{{ category.description|linebreaks|truncatewords:20 }}</p>
+                    <a href="{% url 'task:category_detail' category_id=category.pk %}" class="btn btn-primary read-more-btn">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
+
