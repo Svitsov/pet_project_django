@@ -10,55 +10,7 @@
     <h1 class="text-center mt-4 mb-4">Последние обновления на сайте</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for task in tasks %}
-        <div class="col-12 col-md-6 col-xl-4 mb-4">
-            <div class="card h-100 shadow">
-                {% if task.image.all.count > 0 %}
-                {% if task.image.all.count > 1 %}
-                <div id="imageCarousel{{ task.pk }}" class="carousel slide" data-ride="carousel" data-interval="false">
-                    <div class="carousel-inner">
-                        {% for image in task.image.all %}
-                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                            <a href="javascript:void(0);" onclick="toggleFullscreenImage('{{ image.image.url }}');">
-                                <img src="{{ image.image.url }}" class="d-block w-100 card-img" alt="Image">
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <a class="carousel-control-prev" href="#imageCarousel{{ task.pk }}" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    </a>
-                    <a class="carousel-control-next" href="#imageCarousel{{ task.pk }}" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    </a>
-                </div>
-                <script>
-                    $('#imageCarousel{{ task.pk }}').carousel(); // Инициализация карусели для текущей задачи
-                </script>
-                {% else %}
-                <a href="javascript:void(0);" onclick="toggleFullscreenImage('{{ task.image.first.image.url }}');">
-                    <img src="{{ task.image.first.image.url }}" class="d-block w-100 card-img" alt="Image">
-                </a>
-                {% endif %}
-                {% else %}
-                <a href="javascript:void(0);" onclick="toggleFullscreenImage('{% static 'task/images/nelson.png' %}');">
-                    <img src="{% static 'task/images/nelson.png' %}" class="d-block w-100 card-img" alt="Image">
-                </a>
-                {% endif %}
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-center">{{task.title}}</h5>
-                    <p class="card-text mt-2">{{task.description|linebreaks|truncatewords:20}}.</p>
-                    <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
-                    <div class="category-subject-links">
-                        <a href="{% url 'task:category_detail' category_id=task.category.pk %}" class="link-dark">{{ task.category }}</a>
-                        <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}" class="link-dark">{{ task.subject }}</a>
-                    </div>
-                    <div class="author-date d-flex justify-content-between mt-2">
-                        <a href="#" class="author">{{ task.author }}</a>
-                        <span>{{task.time_update}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'task/includes/task_card.html' with task=task %}
         {% if forloop.counter|divisibleby:3 and not forloop.last %}
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">

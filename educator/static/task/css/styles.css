@@ -138,3 +138,7 @@ a.link-dark:hover {
 .card:hover {
     transform: translate3d(0, -5px, 0);
 }
+.highlight {
+    background-color: rgba(255, 255, 0, 0.4); /* Желтый цвет с прозрачностью */
+    padding: 2px; /* Добавьте немного отступа для визуального разделения */
+}

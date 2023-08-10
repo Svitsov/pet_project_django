@@ -1,6 +1,8 @@
 import random
 
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from django.utils.text import slugify
 
 from .models import *
 
@@ -108,3 +110,31 @@ def task_detail(request, task_id):
         'comments': comments,
     }
     return render(request, 'task/task_detail.html', context=context)
+
+
+def search_results(request):
+    query = request.GET.get('q')
+    if query:
+        tasks = Task.objects.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+        categories = Category.objects.filter(title__icontains=query)
+        subjects = Subject.objects.filter(title__icontains=query)
+
+        # Create separate lists for each model
+        task_results = [{'model_name': 'task', 'object': task} for task in tasks]
+        category_results = [{'model_name': 'category', 'object': category} for category in categories]
+        subject_results = [{'model_name': 'subject', 'object': subject} for subject in subjects]
+
+        # Combine the lists and sort by model name
+        results = task_results + category_results + subject_results
+        results.sort(key=lambda x: x['model_name'])
+
+        # Преобразуем запрос в URL-совместимый формат
+        slugified_query = slugify(query)
+    else:
+        results = []
+        slugified_query = None
+
+    context = {'results': results, 'slugified_query': slugified_query}
+    return render(request, 'task/search_results.html', context)

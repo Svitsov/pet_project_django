@@ -11,5 +11,6 @@ urlpatterns = [
     path('subject/', subject, name='subject'),
     path('subject/<int:subject_id>/', subject_detail, name='subject_detail'),
     path('task/<int:task_id>/', task_detail, name='task_detail'),
+    path('search/', search_results, name='search'),
 
 ]
