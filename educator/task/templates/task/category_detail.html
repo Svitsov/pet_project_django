@@ -1,20 +1,22 @@
 {% extends 'task/base.html' %}
 
 {% block title %}
-Темы категории: {{ category.title }}
+{{ category.title }}
 {% endblock title %}
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-4 mb-4">{{ category.title }}</h1>
+    <h1 class="mt-4 mb-4 text-center">{{ category.title }}</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for subject in subjects %}
+        {% for subject in category_subject %}
         <div class="col-12 col-md-6 col-xl-4">
             <div class="card h-100 shadow">
                 <div class="card-body">
-                    <h5 class="card-title">{{ subject.title }}</h5>
-                    <p class="card-text">{{ subject.description|linebreaks|truncatewords:20 }}</p>
-                    <a href="{% url 'task:subject_detail' subject_id=subject.pk %}" class="btn btn-primary read-more-btn">Подробнее</a>
+                    <h5 class="card-title text-center">{{ subject.title }}</h5>
+                    <p class="card-text text-center">{{ subject.description|truncatewords:40 }}</p>
+                    <div class="mt-auto">
+                        <a href="{% url 'task:subject_detail' subject_id=subject.pk %}" class="btn btn-primary read-more-btn">Подробнее</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,6 +28,7 @@
     </div>
 </div>
 {% endblock %}
+
 
 
 

@@ -1,14 +1,21 @@
 {% extends 'task/base.html' %}
+{% load static %}
 
 {% block title %}
-Главная страница
+{{ subject.title }}
 {% endblock title %}
 
 {% block content %}
+<style>
+    .card {
+        height: 100%;
+    }
+</style>
 <div class="container">
+    <h1 class="mt-4 mb-4 text-center">{{ subject.title }}</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for task in tasks %}
-        <div class="col-12 col-md-6 col-xl-4">
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
             <div class="card h-100 shadow">
                 {% if task.image.all.count > 1 %}
                 <div id="imageCarousel{{ task.pk }}" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -38,11 +45,18 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{task.title}}</h5>
+                    <div class="category-section">
+                        <div class="category-subject-links">
+                            <p>Тема:
+                            <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}">
+                                {{ task.subject }}</a>
+                            </p>
+                        </div>
+                    </div>
                     <p class="card-text">{{task.description|linebreaks|truncatewords:20}}.</p>
                     <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
                     <div class="category-subject-links">
-                        <a href="#">{{ task.category }}</a>
-                        <a href="#">{{ task.subject }}</a>
+                        <a href="{% url 'task:category_detail' category_id=task.category.pk %}">{{ task.category }}</a>
                     </div>
                     <div class="author-date">
                         <a href="#" class="author">{{ task.author }}</a>
@@ -64,3 +78,6 @@
     </a>
 </div>
 {% endblock %}
+
+
+

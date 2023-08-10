@@ -46,13 +46,15 @@ def category(request):
 def category_detail(request, category_id):
     categories = Category.objects.all()
     category = get_object_or_404(Category, id=category_id)
-    subjects = Subject.objects.filter(category=category)
+    category_subject = Subject.objects.filter(category=category)
+    subjects = Subject.objects.all()
 
     context = {
         'title': 'Детали категории',
         'categories': categories,
         'menu': MENU,
         'category': category,
+        'category_subject': category_subject,
         'subjects': subjects,
     }
     return render(request, 'task/category_detail.html', context=context)
@@ -74,6 +76,8 @@ def subject(request):
 
 
 def subject_detail(request, subject_id):
+    categories = Category.objects.all()
+    subjects = Subject.objects.all()
     subject = get_object_or_404(Subject, pk=subject_id)
     tasks = Task.objects.filter(subject=subject_id)
     context = {
@@ -81,6 +85,8 @@ def subject_detail(request, subject_id):
         'menu': MENU,
         'subject': subject,
         'tasks': tasks,
+        'categories': categories,
+        'subjects': subjects,
     }
     return render(request, 'task/subject_detail.html', context)
 

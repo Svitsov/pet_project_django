@@ -2,15 +2,17 @@
 {% load static %}
 
 {% block title %}
-Главная страница
+Последние обновления на сайте
 {% endblock title %}
 
 {% block content %}
 <div class="container">
+    <h1 class="text-center mt-4 mb-4">Последние обновления на сайте</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for task in tasks %}
-        <div class="col-12 col-md-6 col-xl-4">
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
             <div class="card h-100 shadow">
+                {% if task.image.all.count > 0 %}
                 {% if task.image.all.count > 1 %}
                 <div id="imageCarousel{{ task.pk }}" class="carousel slide" data-ride="carousel" data-interval="false">
                     <div class="carousel-inner">
@@ -37,15 +39,20 @@
                     <img src="{{ task.image.first.image.url }}" class="d-block w-100 card-img" alt="Image">
                 </a>
                 {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{task.title}}</h5>
-                    <p class="card-text">{{task.description|linebreaks|truncatewords:20}}.</p>
+                {% else %}
+                <a href="javascript:void(0);" onclick="toggleFullscreenImage('{% static 'task/images/nelson.png' %}');">
+                    <img src="{% static 'task/images/nelson.png' %}" class="d-block w-100 card-img" alt="Image">
+                </a>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-center">{{task.title}}</h5>
+                    <p class="card-text mt-2">{{task.description|linebreaks|truncatewords:20}}.</p>
                     <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
                     <div class="category-subject-links">
-                        <a href="{% url 'task:category_detail' category_id=task.category.pk %}">{{ task.category }}</a>
-                        <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}">{{ task.subject }}</a>
+                        <a href="{% url 'task:category_detail' category_id=task.category.pk %}" class="link-dark">{{ task.category }}</a>
+                        <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}" class="link-dark">{{ task.subject }}</a>
                     </div>
-                    <div class="author-date">
+                    <div class="author-date d-flex justify-content-between mt-2">
                         <a href="#" class="author">{{ task.author }}</a>
                         <span>{{task.time_update}}</span>
                     </div>
@@ -65,6 +72,12 @@
     </a>
 </div>
 {% endblock %}
+
+
+
+
+
+
 
 
 

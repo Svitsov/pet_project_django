@@ -1,21 +1,46 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'task:home' %}">Educator</a>
+        <a class="navbar-brand neon-link-red" href="{% url 'task:home' %}">Educator</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Переключить навигацию">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'task:category' %}">Категории</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Категории
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                        <li><a class="dropdown-item" href="{% url 'task:category' %}">Все категории</a></li>
+                        {% for category in categories %}
+                        <li><a class="dropdown-item" href="{% url 'task:category_detail' category_id=category.pk %}">
+                            {{ category.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="subjectsDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Темы
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="subjectsDropdown">
+                        <li><a class="dropdown-item" href="{% url 'task:subject' %}">Все темы</a></li>
+                        {% for subject in subjects %}
+                        <li><a class="dropdown-item" href="{% url 'task:subject_detail' subject_id=subject.pk %}">
+                            {{ subject.title }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'task:subject' %}">Темы</a>
+                    <a class="nav-link neon-link-green" href="#">Прочее</a>
                 </li>
+                {% if user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Прочее</a>
+                    <a class="nav-link neon-link-blue" href="{% url 'admin:index' %}">Админ панель</a>
                 </li>
+                {% endif %}
             </ul>
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
@@ -25,4 +50,52 @@
     </div>
 </nav>
 
+<style>
+    .neon-link-red, .neon-link-green, .neon-link-blue {
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s;
+    }
 
+    .neon-link-red:hover {
+        color: #f00;
+        animation: neon-glow-red 1s ease-in-out infinite alternate;
+    }
+
+    .neon-link-green:hover {
+        color: #0f0;
+        animation: neon-glow-green 1s ease-in-out infinite alternate;
+    }
+
+    .neon-link-blue:hover {
+        color: #00f;
+        animation: neon-glow-blue 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-glow-red {
+        from {
+            text-shadow: 0 0 5px #f00, 0 0 10px #f00, 0 0 15px #f00;
+        }
+        to {
+            text-shadow: 0 0 10px #f00, 0 0 20px #f00, 0 0 30px #f00;
+        }
+    }
+
+    @keyframes neon-glow-green {
+        from {
+            text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 15px #0f0;
+        }
+        to {
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+        }
+    }
+
+    @keyframes neon-glow-blue {
+        from {
+            text-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 15px #00f;
+        }
+        to {
+            text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f;
+        }
+    }
+</style>
