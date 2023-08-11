@@ -142,3 +142,64 @@ a.link-dark:hover {
     background-color: rgba(255, 255, 0, 0.4); /* Желтый цвет с прозрачностью */
     padding: 2px; /* Добавьте немного отступа для визуального разделения */
 }
+.comment-card {
+    transition: box-shadow 0.3s;
+}
+
+.comment-card:hover {
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+#moreCommentsContainer {
+    text-align: center;
+}
+
+#loadMoreComments {
+    background-color: #f0f0f0;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#loadMoreComments:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+
+#commentForm {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#commentForm textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+#commentForm button {
+    background-color: #f0f0f0;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+}
+
+#commentForm button:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+

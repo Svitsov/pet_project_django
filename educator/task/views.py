@@ -3,8 +3,11 @@ import random
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.utils.text import slugify
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from .models import *
+from .forms import CommentForm
 
 MENU = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить статью', 'url_name': 'add_page'},
@@ -138,3 +141,64 @@ def search_results(request):
 
     context = {'results': results, 'slugified_query': slugified_query}
     return render(request, 'task/search_results.html', context)
+
+
+def toggle_like(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    user = request.user
+
+    if user.is_authenticated:
+        if task.likes.filter(id=user.id).exists():
+            task.likes.remove(user)
+        else:
+            task.likes.add(user)
+
+    return JsonResponse({'likes_count': task.likes.count()})
+
+
+def toggle_dislike(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    user = request.user
+
+    if user.is_authenticated:
+        if task.dislikes.filter(id=user.id).exists():
+            task.dislikes.remove(user)
+        else:
+            task.dislikes.add(user)
+
+    return JsonResponse({'dislikes_count': task.dislikes.count()})
+
+
+@login_required
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    comments = Comment.objects.filter(task=task)
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.task = task
+            new_comment.user = request.user  # Assign the authenticated user
+            new_comment.save()
+            comment_form = CommentForm()
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'task/task_detail.html',
+                  {'task': task, 'comments': comments, 'comment_form': comment_form})
+
+
+def load_more_comments(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    comments = Comment.objects.filter(task=task).order_by('-pub_date')[10:]
+
+    data = []
+    for comment in comments:
+        data.append({
+            'author': comment.author.username,
+            'text': comment.text,
+            'pub_date': comment.pub_date.strftime("%d %B %Y, %H:%M")
+        })
+
+    return JsonResponse(data, safe=False)

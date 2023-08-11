@@ -52,17 +52,90 @@
             <div class="text-muted">{{ task.time_update }}</div>
         </div>
     </div>
-
+    <hr>
     <div class="rounded mt-4 p-3 shadow">
-        <h5 class="mb-3">Комментарии</h5>
-        {% for comment in comments %}
-        <div class="rounded p-2 mb-3 bg-light">
-            <p>{{ comment.text }}</p>
+        <h5 class="mb-3">Комментарии:</h5>
+        {% for comment in comments|slice:":10" %}
+        <div class="container mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="media-body">
+                        <h6 class="mt-0">Автор: {{ comment.author }}</h6>
+                        <p class="mb-0">{{ comment.text }}</p>
+                        <p class="text-muted small">{{ comment.pub_date|date:"d F Y, H:i" }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
+        <div id="moreCommentsContainer">
+            {% if comments|length > 10 %}
+            <button class="btn btn-link mt-3" id="loadMoreComments" role="button">
+                Загрузить еще комментарии
+            </button>
+            {% endif %}
+        </div>
+        <div class="collapse" id="collapseMoreComments">
+            <div id="additionalComments">
+            </div>
+        </div>
+    </div>
+    <div class="rounded mt-4 p-3 shadow">
+        {% if user.is_authenticated %}
+        <form id="commentForm" method="post" style="width: 100%;">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+        </form>
+        {% else %}
+        <p>Только авторизованные пользователи могут оставлять комментарии.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
+        <a href="{% url 'register' %}" class="btn btn-secondary">Зарегистрироваться</a>
+        {% endif %}
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loadMoreButton = document.querySelector("#loadMoreComments");
+        const additionalCommentsContainer = document.querySelector("#additionalComments");
+
+        loadMoreButton.addEventListener("click", function () {
+            loadMoreButton.style.display = "none";
+
+            fetch("{% url 'task:load_more_comments' task.id %}")
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(comment => {
+                        const commentCard = document.createElement("div");
+                        commentCard.className = "container mt-4";
+                        commentCard.innerHTML = `
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <div class="media-body">
+                                        <h6 class="mt-0">Автор: ${comment.author}</h6>
+                                        <p class="mb-0">${comment.text}</p>
+                                        <p class="text-muted small">${comment.pub_date}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        additionalCommentsContainer.appendChild(commentCard);
+                    });
+
+                    if (data.length > 0) {
+                        document.querySelector("#collapseMoreComments").classList.add("show");
+                    }
+                })
+                .catch(error => console.error("Error loading more comments:", error));
+        });
+    });
+
+</script>
 {% endblock %}
+
+
+
 
 
 

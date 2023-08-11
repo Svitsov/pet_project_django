@@ -12,5 +12,8 @@ urlpatterns = [
     path('subject/<int:subject_id>/', subject_detail, name='subject_detail'),
     path('task/<int:task_id>/', task_detail, name='task_detail'),
     path('search/', search_results, name='search'),
+    path('toggle_like/<int:task_id>/', toggle_like, name='toggle_like'),
+    path('toggle_dislike/<int:task_id>/', toggle_dislike, name='toggle_dislike'),
+    path('load_more_comments/<int:task_id>/', load_more_comments, name='load_more_comments'),
 
 ]

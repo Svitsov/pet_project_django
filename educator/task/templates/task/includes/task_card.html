@@ -2,22 +2,38 @@
     <div class="card h-100 shadow">
         <div class="card-body">
             <h5 class="card-title">{{task.title}}</h5>
-            <div class="category-section">
-                <div class="category-subject-links">
-                    <p>Тема:
-                    <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}">
-                        {{ task.subject }}</a>
-                    </p>
-                </div>
-            </div>
             <p class="card-text">{{task.description|linebreaks|truncatewords:20}}.</p>
-            <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
             <div class="category-subject-links">
-                <a href="{% url 'task:category_detail' category_id=task.category.pk %}">{{ task.category }}</a>
+                <p>Категория: <a href="{% url 'task:category_detail' category_id=task.category.pk %}">
+                    {{ task.category }}</a>
+                </p>
             </div>
+            <div class="category-subject-links">
+                <p>Тема: <a href="{% url 'task:subject_detail' subject_id=task.subject.pk %}">
+                    {{ task.subject }}</a>
+                </p>
+            </div>
+            <a href="{% url 'task:task_detail' task_id=task.pk %}" class="btn btn-primary read-more-btn">Читать
+                целиком</a>
             <div class="author-date">
                 <a href="#" class="author">{{ task.author }}</a>
                 <span>{{task.time_update}}</span>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <div class="like-dislike">
+                    <button class="like-button" data-task-id="{{ task.id }}">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <span class="likes-count">{{ task.likes.count }}</span>
+                </div>
+                <div class="like-dislike">
+                    <button class="dislike-button" data-task-id="{{ task.id }}">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                    <span class="dislikes-count">{{ task.dislikes.count }}</span>
+                </div>
             </div>
         </div>
     </div>

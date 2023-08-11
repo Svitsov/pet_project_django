@@ -16,10 +16,29 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-center mb-3">{{ result.object.title }}</h5>
                     <p class="card-text mt-2">{{ result.object.description|linebreaks|truncatewords:20 }}.</p>
-                    <a href="{% url 'task:task_detail' task_id=result.object.pk %}" class="btn btn-primary read-more-btn">Читать целиком</a>
                     <div class="category-subject-links">
-                        <a href="{% url 'task:category_detail' category_id=result.object.category.pk %}" class="link-dark">{{ result.object.category }}</a>
-                        <a href="{% url 'task:subject_detail' subject_id=result.object.subject.pk %}" class="link-dark">{{ result.object.subject }}</a>
+                        <p>Категория: <a href="{% url 'task:category_detail' category_id=result.object.category.pk %}"
+                           class="link-dark">{{ result.object.category }}</a></p>
+                    </div>
+                    <div class="category-subject-links">
+                        <p>Тема: <a href="{% url 'task:subject_detail' subject_id=result.object.subject.pk %}" class="link-dark">
+                            {{ result.object.subject }}</a></p>
+                    </div>
+                    <a href="{% url 'task:task_detail' task_id=result.object.pk %}"
+                       class="btn btn-primary read-more-btn">Читать целиком</a>
+                    <div class="d-flex justify-content-between mt-2">
+                        <div class="like-dislike">
+                            <button class="like-button" data-task-id="{{ result.object.id }}">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                            <span class="likes-count">{{ result.object.likes.count }}</span>
+                        </div>
+                        <div class="like-dislike">
+                            <button class="dislike-button" data-task-id="{{ result.object.id }}">
+                                <i class="fas fa-thumbs-down"></i>
+                            </button>
+                            <span class="dislikes-count">{{ result.object.dislikes.count }}</span>
+                        </div>
                     </div>
                     <div class="author-date d-flex justify-content-between mt-2">
                         <a href="#" class="author">{{ result.object.author }}</a>
@@ -30,13 +49,19 @@
                 <div class="card-body">
                     <h5 class="card-title text-center mb-3">{{ result.object.title }}</h5>
                     <p class="card-text">{{ result.object.description }}</p>
-                    <a href="{% url 'task:category_detail' category_id=result.object.pk %}" class="btn btn-primary read-more-btn">Подробнее</a>
+                    <a href="{% url 'task:category_detail' category_id=result.object.pk %}"
+                       class="btn btn-primary read-more-btn">Подробнее</a>
                 </div>
                 {% elif result.model_name == "subject" %}
                 <div class="card-body">
                     <h5 class="card-title text-center mb-3">{{ result.object.title }}</h5>
                     <p class="card-text">{{ result.object.description }}</p>
-                    <a href="{% url 'task:subject_detail' subject_id=result.object.pk %}" class="btn btn-primary read-more-btn">Подробнее</a>
+                    <div class="category-subject-links">
+                        <p>Категория: <a href="{% url 'task:category_detail' category_id=result.object.category.pk %}"
+                                         class="link-dark">{{ result.object.category }}</a></p>
+                    </div>
+                    <a href="{% url 'task:subject_detail' subject_id=result.object.pk %}"
+                       class="btn btn-primary read-more-btn">Подробнее</a>
                 </div>
                 {% endif %}
             </div>
@@ -52,6 +77,7 @@
     {% endif %}
 </div>
 {% endblock %}
+
 
 
 

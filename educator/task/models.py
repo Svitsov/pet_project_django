@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -32,6 +33,8 @@ class Task(models.Model):
         verbose_name="Тема",
         related_name='subject'
     )
+    likes = models.ManyToManyField(User, related_name='liked_tasks', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_tasks', blank=True)
 
     def __str__(self):
         return self.title
@@ -113,8 +116,17 @@ class Comment(models.Model):
         related_name='comment',
     )
     text = models.TextField(blank=True, verbose_name="Комментарий")
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Автор',
+        default=1  # Здесь 1 - это ID существующего пользователя или другое значение по умолчанию
+    )
+    pub_date = models.DateTimeField(default=timezone.now, verbose_name="Дата публикации")
+    time_update = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
 
     class Meta:
-        verbose_name = 'Комментарии'
+        verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ['task']
+        ordering = ['pub_date']
