@@ -48,7 +48,7 @@
             {% endif %}
         </div>
         <div class="card-footer d-flex justify-content-between">
-            <div class="text-muted">{{ task.author }}</div>
+            <div class="text-muted">{{ task.author.get_full_name }}</div>
             <div class="text-muted">{{ task.time_update }}</div>
         </div>
     </div>
@@ -60,7 +60,7 @@
             <div class="card shadow">
                 <div class="card-body">
                     <div class="media-body">
-                        <h6 class="mt-0">Автор: {{ comment.author }}</h6>
+                        <h6 class="mt-0">Автор: {{ comment.author.get_full_name }}</h6>
                         <p class="mb-0">{{ comment.text }}</p>
                         <p class="text-muted small">{{ comment.pub_date|date:"d F Y, H:i" }}</p>
                     </div>
@@ -89,8 +89,8 @@
         </form>
         {% else %}
         <p>Только авторизованные пользователи могут оставлять комментарии.</p>
-        <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
-        <a href="{% url 'register' %}" class="btn btn-secondary">Зарегистрироваться</a>
+        <a href="{% url 'users:login' %}" class="btn btn-primary">Войти</a>
+        <a href="{% url 'users:signup' %}" class="btn btn-secondary">Зарегистрироваться</a>
         {% endif %}
     </div>
 </div>
@@ -130,6 +130,7 @@
                 .catch(error => console.error("Error loading more comments:", error));
         });
     });
+
 
 </script>
 {% endblock %}

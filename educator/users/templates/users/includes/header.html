@@ -109,11 +109,10 @@
                         {% endif %}
                         {% endwith %}
                     </ul>
-                </li>
-                <form class="d-flex" action="{% url 'task:search' %}" method="get">
-                    <input class="form-control me-2" type="search" name="q" placeholder="Поиск" aria-label="Поиск">
-                    <button class="btn btn-outline-success" type="submit">Поиск</button>
-                </form>
+                    <form class="d-flex" action="{% url 'task:search' %}" method="get">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Поиск" aria-label="Поиск">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>
         </div>
     </div>
 </nav>

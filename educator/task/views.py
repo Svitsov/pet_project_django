@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils.text import slugify
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import *
 from .forms import CommentForm
@@ -14,6 +15,7 @@ MENU = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
         {'title': 'Войти', 'url_name': 'login'},
         ]
+NUMBER_OF_CARDS = 9
 
 
 def index(request):
@@ -21,10 +23,13 @@ def index(request):
     tasks = Task.objects.all()
     categories = Category.objects.all()
     subjects = Subject.objects.all()
+    paginator = Paginator(tasks, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
+        'page_obj': page_obj,
         'title': 'Главная страница',
         'menu': MENU,
-        'tasks': tasks,
         'categories': categories,
         'subjects': subjects,
         'category_selected': 0,
@@ -37,11 +42,14 @@ def category(request):
     task = Task.objects.all()
     categories = Category.objects.all()
     subjects = Subject.objects.all()
+    paginator = Paginator(categories, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'title': 'Главная страница',
         'menu': MENU,
         'task': task,
-        'categories': categories,
+        'page_obj': page_obj,
         'subjects': subjects,
         'category_selected': 0,
     }
@@ -53,13 +61,15 @@ def category_detail(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category_subject = Subject.objects.filter(category=category)
     subjects = Subject.objects.all()
-
+    paginator = Paginator(category_subject, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'title': 'Детали категории',
         'categories': categories,
         'menu': MENU,
         'category': category,
-        'category_subject': category_subject,
+        'page_obj': page_obj,
         'subjects': subjects,
     }
     return render(request, 'task/category_detail.html', context=context)
@@ -69,12 +79,15 @@ def subject(request):
     task = Task.objects.all()
     categories = Category.objects.all()
     subjects = Subject.objects.all()
+    paginator = Paginator(subjects, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'title': 'Главная страница',
         'menu': MENU,
         'task': task,
         'categories': categories,
-        'subjects': subjects,
+        'page_obj': page_obj,
         'category_selected': 0,
     }
     return render(request, 'task/subject.html', context=context)
@@ -85,11 +98,14 @@ def subject_detail(request, subject_id):
     subjects = Subject.objects.all()
     subject = get_object_or_404(Subject, pk=subject_id)
     tasks = Task.objects.filter(subject=subject_id)
+    paginator = Paginator(tasks, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'title': subject.title,
         'menu': MENU,
         'subject': subject,
-        'tasks': tasks,
+        'page_obj': page_obj,
         'categories': categories,
         'subjects': subjects,
     }
@@ -102,6 +118,16 @@ def task_detail(request, task_id):
     subjects = Subject.objects.all()
     images = TaskImage.objects.filter(task=task_id)
     comments = Comment.objects.filter(task=task_id)
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.task = task
+            new_comment.user = request.user
+            new_comment.save()
+            comment_form = CommentForm()
+    else:
+        comment_form = CommentForm()
     context = {
         'title': 'Главная страница',
         'menu': MENU,
@@ -111,6 +137,7 @@ def task_detail(request, task_id):
         'category_selected': 0,
         'images': images,
         'comments': comments,
+        'comment_form': comment_form
     }
     return render(request, 'task/task_detail.html', context=context)
 
@@ -138,8 +165,13 @@ def search_results(request):
     else:
         results = []
         slugified_query = None
-
-    context = {'results': results, 'slugified_query': slugified_query}
+    paginator = Paginator(results, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'page_obj': page_obj,
+        'slugified_query': slugified_query
+    }
     return render(request, 'task/search_results.html', context)
 
 
@@ -169,26 +201,6 @@ def toggle_dislike(request, task_id):
     return JsonResponse({'dislikes_count': task.dislikes.count()})
 
 
-@login_required
-def task_detail(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    comments = Comment.objects.filter(task=task)
-
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.task = task
-            new_comment.user = request.user  # Assign the authenticated user
-            new_comment.save()
-            comment_form = CommentForm()
-    else:
-        comment_form = CommentForm()
-
-    return render(request, 'task/task_detail.html',
-                  {'task': task, 'comments': comments, 'comment_form': comment_form})
-
-
 def load_more_comments(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     comments = Comment.objects.filter(task=task).order_by('-pub_date')[10:]
@@ -202,3 +214,16 @@ def load_more_comments(request, task_id):
         })
 
     return JsonResponse(data, safe=False)
+
+
+def profile(request, username):
+    author = get_object_or_404(User, username=username)
+    task_list = author.posts.all()
+    paginator = Paginator(task_list, NUMBER_OF_CARDS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'author': author,
+        'page_obj': page_obj,
+    }
+    return render(request, 'task/profile.html', context)

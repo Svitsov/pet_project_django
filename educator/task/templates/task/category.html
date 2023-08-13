@@ -8,7 +8,7 @@
 <div class="container">
     <h1 class="text-center mt-4 mb-4">Все категории</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for category in categories %}
+        {% for category in page_obj %}
         <div class="col-12 col-md-6 col-xl-4 mb-4">
             <div class="card h-100 shadow d-flex align-items-center justify-content-center">
                 <div class="card-body text-center">
@@ -23,6 +23,9 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% endif %}
         {% endfor %}
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% include 'task/includes/paginator.html' %}
     </div>
 </div>
 {% endblock %}

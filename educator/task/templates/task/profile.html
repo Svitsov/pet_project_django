@@ -1,0 +1,70 @@
+{% extends 'task/base.html' %}
+{% block title %}
+  Профайл пользователя {{ author.get_full_name }}
+{% endblock title %}
+{% block content %}
+  <h1>Все задачи пользователя {{ author.get_full_name }} </h1>
+  <h3>Всего задач: <span>{{ author.task.count }}</span></h3>
+  {% if following != None %}
+    {% if following %}
+      <a
+        class="btn btn-lg btn-light"
+        href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+      >
+        Отписаться
+      </a>
+    {% else %}
+      <a
+        class="btn btn-lg btn-primary"
+        href="{% url 'posts:profile_follow' author.username %}" role="button"
+      >
+        Подписаться
+      </a>
+    {% endif %}
+  {% endif %}
+  <br>
+  <br>
+  {% for task in page_obj %}
+    <article>
+      <ul>
+        <li>
+          Автор: {{ task.author.get_full_name }}
+        </li>
+        <li>
+          Дата публикации: {{ task.pub_date|date:"d E Y" }}
+        </li>
+        <li>
+          {{ task.category }}
+        </li>
+        <li>
+          {{ task.subject }}
+        </li>
+      </ul>
+      <p>{{ task.text|linebreaksbr }}</p>
+      <a class="link-primary" href="{% url 'task:task_detail' post.pk %}">Подробнее</a>
+      <br>
+      <br>
+      {% if task.category %}
+        <button type="button" class="btn btn-outline-info">
+          <a
+            href="{% url 'task:category' task.category.category_id %}"
+            color="red"
+          >
+            Все записи категории
+          </a>
+        </button>
+      {% endif %}
+      {% if task.subject %}
+        <button type="button" class="btn btn-outline-info">
+          <a
+            href="{% url 'task:subject' task.subject.subject_id %}"
+            color="red"
+          >
+            Все записи темы
+          </a>
+        </button>
+      {% endif %}
+    </article>
+    {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
+{% endblock content %}

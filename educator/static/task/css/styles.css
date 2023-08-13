@@ -203,3 +203,87 @@ a.link-dark:hover {
 }
 
 
+/* header */
+.neon-link-red, .neon-link-green, .neon-link-blue {
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.neon-link-red:hover {
+    color: #f00;
+    animation: neon-glow-red 1s ease-in-out infinite alternate;
+}
+
+.neon-link-green:hover {
+    color: #0f0;
+    animation: neon-glow-green 1s ease-in-out infinite alternate;
+}
+
+.neon-link-blue:hover {
+    color: #00f;
+    animation: neon-glow-blue 1s ease-in-out infinite alternate;
+}
+
+@keyframes neon-glow-red {
+    from {
+        text-shadow: 0 0 5px #f00, 0 0 10px #f00, 0 0 15px #f00;
+    }
+    to {
+        text-shadow: 0 0 10px #f00, 0 0 20px #f00, 0 0 30px #f00;
+    }
+}
+
+@keyframes neon-glow-green {
+    from {
+        text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 15px #0f0;
+    }
+    to {
+        text-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+    }
+}
+
+@keyframes neon-glow-blue {
+    from {
+        text-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 15px #00f;
+    }
+    to {
+        text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f;
+    }
+}
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    align-self: center;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #000; /* Изменили цвет шрифта */
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
